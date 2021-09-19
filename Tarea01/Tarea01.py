@@ -24,7 +24,8 @@ Para ingresar la función se debe usar la sintaxis lambda de Python.
 Ejemplo:
 Para interpolar coseno: python Tarea01.py "lambda x: np.cos(x)" <a> <b> <n> <x>
 
-Las comillas son necesarias para que la función sea tomada como un solo parámetro y no varios.
+Las comillas son necesarias para que la función sea tomada como un solo
+parámetro y no varios.
 """
 
 
@@ -37,29 +38,29 @@ pts_equi = []    # Define una lista para los puntos equidistantes
 punto = a
 for i in range(n):
     pts_equi.append(punto)
-    punto+=((b - a) / n)
-    
+    punto += ((b - a) / n)
+
 # Cálculo de los puntos de Chebyshev
-    
+
 punto = 0
 for i in range(n):
     punto = np.cos(((2*i+1)*np.pi)/(2*n))
     punto = ((b-a)*punto+a+b)/2
     pts_chev.append(punto)
-    
+
 # Interpolación
-res_e = 0 # Resultado de interpolación con puntos equidistantes 
-res_c = 0 # Resultado de interpolación con puntos de Chebyshev
-  
+res_e = 0    # Resultado de interpolación con puntos equidistantes
+res_c = 0    # Resultado de interpolación con puntos de Chebyshev
+
 for i in range(len(pts_equi)):
-    prod_e = 1 # Producto para los puntos equidistantes
-    prod_c = 1 # Producto para los puntos de Chebyshev
+    prod_e = 1    # Producto para los puntos equidistantes
+    prod_c = 1    # Producto para los puntos de Chebyshev
     for j in range(len(pts_equi)):
-        if j!=i:
-            prod_e*=(x-pts_equi[j])/(pts_equi[i]-pts_equi[j])
-            prod_c*=(x-pts_chev[j])/(pts_chev[i]-pts_chev[j])
-    res_e+=f(pts_equi[i])*prod_e
-    res_c+=f(pts_chev[i])*prod_c
+        if j != i:
+            prod_e *= (x-pts_equi[j])/(pts_equi[i]-pts_equi[j])
+            prod_c *= (x-pts_chev[j])/(pts_chev[i]-pts_chev[j])
+    res_e += f(pts_equi[i])*prod_e
+    res_c += f(pts_chev[i])*prod_c
 
 # Cálculo del error de interpolación
 err_e = np.abs(res_e-f(x))
