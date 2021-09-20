@@ -120,7 +120,7 @@ for i in range(6):
         print('---')
         j += 1
 
-iint = sy.integrate(f(x, i, j), (x, 0, 1))
+iint = sy.integrate(f(x, 6, 0), (x, 0, 1))
 poly = lambda x, y: twoVarPoly(x, y, 6, 0)
 iint_approx = integrateOverT(poly)
 print('Función a integrar: x^6')
