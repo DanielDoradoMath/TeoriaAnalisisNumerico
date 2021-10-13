@@ -95,7 +95,8 @@ def integrate(func, m1, m2, m3, method='num'):
     y m3
     """
     fT = redef(func, m1, m2, m3)
-    return integrateOverT(fT, method)
+    J = jacobian(m1,m2,m3)
+    return integrateOverT(fT, method)*J
 
 
 def f(x, i, j):
