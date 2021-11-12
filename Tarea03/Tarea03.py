@@ -1,18 +1,41 @@
 import numpy as np
+import numpy.linalg as la
 
 
 def solve_system (xmin, xmax, ymin, ymax, f, g, c, n, m, eps, N_max, omega, imet):
     xk = np.random.random(n*m)
     b = constantVector(xmin, xmax, ymin, ymax, f, g, n, m)
-    alpha = getConstants(xmin, xmax, ymin, ymax, c, n, m)
+    diag = getDiagonal(xmin, xmax, ymin, ymax, c, n, m)
     k = (ymax-ymin)/(m+1)
     h = (xmax-xmin)/(n+1)
     p = (k/h)**2
-    rk = 2
-    rk_norm = np.linalg.norm()
+    A_dot = lambda vec: A_left(vec, diag, p, n)
+    rk = b - A_dot(xk)
+    rk_norm = la.norm(rk)
 
 
-def getConstants(xmin, xmax, ymin, ymax, c, n, m):
+    if imet == 1:
+        pass
+    elif imet == 2:
+        pass
+    else:
+        num_it = 0
+        pk = rk
+        while (num_it < N_max) and (rk_norm > eps):
+            apk = A_dot(pk)
+            rkrk = np.dot(rk,rk)
+
+            alpha = rkrk / np.dot(pk, apk)
+            xk += alpha * pk
+            rk -= alpha * apk
+            beta = np.dot(rk, rk) / rkrk
+            pk = rk + beta * pk
+            
+            num_it += 1
+            rk_norm = la.norm(rk)
+
+
+def getDiagonal(xmin, xmax, ymin, ymax, c, n, m):
     """
     Obtiene los términos de la diagonal de la matriz A.
     """
@@ -26,38 +49,6 @@ def getConstants(xmin, xmax, ymin, ymax, c, n, m):
         for j in range(1,m+1):
             alpha[(j-1)*n+i-1] = 2*p + 2 + (k**2)*c(x[i],y[j])
     return alpha
-
-
-# def getInitValueMatrix(xmin, xmax, ymin, ymax, g, n, m):
-#     """
-#     Dado un rectángulo y una función definida sobre su frontera, esta función
-#     retorna una matriz de Numpy de tamaño n x m con los valores de g en los
-#     bordes y valores aleatorios al interior.
-#     Esta matriz da los valores de x0 para los métodos iterativos.
-#     """
-#     x = np.linspace(xmin, xmax, n+2)
-#     y = np.linspace(ymin, ymax, m+2)
-#     u = np.ones((m+2, n+2))
-#     for i in range(n+2):
-#         for j in range(m+2):
-#             if i*j == 0 or i==n+1 or j==m+1:
-#                 u[j,i] = g(x[i], y[j])
-#             else:
-#                 u[j,i] = np.random.random()
-#     return u
-
-# def getVector(u):
-#     """
-#     Dada una matriz de valores, obtiene el vector x que aproxima la solución 
-#     al sistema Ax=b.
-#     """
-#     n = u[0].size - 2
-#     m = u[:,0].size - 2
-#     x = np.zeros(n*m)
-#     for j in range(1,m+1):
-#         for i in range(1,n+1):
-#             x[(j-1)*n+i-1] = u[j,i]
-#     return x
 
 
 def constantVector(xmin, xmax, ymin, ymax, f, g, n, m):
@@ -82,3 +73,19 @@ def constantVector(xmin, xmax, ymin, ymax, f, g, n, m):
             if j == m:
                 b[(j-1)*n+i-1] += g(x[i], y[j+1])
     return b
+
+def A_left(x, diag, p, n):
+    s = x.size
+    prod = np.zeros(s)
+    for i, comp in enumerate(x):
+        r = diag[i]*comp
+        if i>1:
+            r += -p*x[i-1]
+        if i<s-1:
+            r += -p*x[i+1]
+        if i+n<s:
+            r -= x[i+n]
+        if i-n>0:
+            r -= x[i-x]
+        prod[i] = r
+    return prod
