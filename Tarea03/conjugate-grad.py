@@ -17,7 +17,7 @@ def A_prod (x,y, A):
     prod = 0
     for i in range(len(x)):
         for j in range(len(y)):
-            prod += y[j] A[j][i] * x[i]
+            prod += y[j] * A[j][i] * x[i]
     return prod
 
 
@@ -39,7 +39,6 @@ def LinearCG(A, b, x0, eps=1e-5):
         pk = -rk + beta * pk
         
         num_iter += 1
-        curve_x.append(xk)
         rk_norm = np.linalg.norm(rk)
         print('Iteration: {} \t x = {} \t residual = {:.4f}'.
               format(num_iter, xk, rk_norm))

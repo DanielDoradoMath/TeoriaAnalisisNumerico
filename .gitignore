@@ -1,3 +1,5 @@
 /.vscode
 *.json
 .DS_Store
+pruebas.ipynb
+/.ipynb_checkpoints
