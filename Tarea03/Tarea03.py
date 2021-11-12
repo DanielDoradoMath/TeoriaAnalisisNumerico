@@ -2,7 +2,7 @@ import numpy as np
 import numpy.linalg as la
 
 
-def solve_system (xmin, xmax, ymin, ymax, f, g, c, n, m, eps, N_max, omega, imet):
+def solvePDE (xmin, xmax, ymin, ymax, f, g, c, n, m, eps, N_max, omega, imet):
     xk = np.random.random(n*m)
     b = constantVector(xmin, xmax, ymin, ymax, f, g, n, m)
     diag = getDiagonal(xmin, xmax, ymin, ymax, c, n, m)
