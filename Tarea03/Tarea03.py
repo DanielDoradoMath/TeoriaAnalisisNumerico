@@ -13,12 +13,11 @@ def solve_system (xmin, xmax, ymin, ymax, f, g, c, n, m, eps, N_max, omega, imet
     rk = b - A_dot(xk)
     rk_norm = la.norm(rk)
 
-
     if imet == 1:
         pass
     elif imet == 2:
         pass
-    else:
+    elif imet == 3:
         num_it = 0
         pk = rk
         while (num_it < N_max) and (rk_norm > eps):
@@ -33,6 +32,11 @@ def solve_system (xmin, xmax, ymin, ymax, f, g, c, n, m, eps, N_max, omega, imet
             
             num_it += 1
             rk_norm = la.norm(rk)
+        printResult(num_it, N_max, xk, rk_norm, n, m)
+    else:
+        print('Método no implementado.')
+        
+    
 
 
 def getDiagonal(xmin, xmax, ymin, ymax, c, n, m):
@@ -74,6 +78,7 @@ def constantVector(xmin, xmax, ymin, ymax, f, g, n, m):
                 b[(j-1)*n+i-1] += g(x[i], y[j+1])
     return b
 
+
 def A_left(x, diag, p, n):
     s = x.size
     prod = np.zeros(s)
@@ -89,3 +94,26 @@ def A_left(x, diag, p, n):
             r -= x[i-x]
         prod[i] = r
     return prod
+
+
+def printResult(num_it, N_max, vec, res_norm, n, m):
+    if num_it > N_max:
+        print('No hubo convergencia en el número de iteraciones máximo.')
+        print('Norma del residuo final: {.4f}.'.format(res_norm))
+        print('Tabla de resultados:')
+        print('|   i   |   j   |  k(i,j)  |  mu(i,j)  |')
+        print('|-------|-------|----------|-----------|')
+        for j in range(1, m+1):
+            for i in range(1, n+1):
+                k = (j-1)*n+i
+                print('|{:7d^}|{:7d^}|{:10d^}|{:11.3f}|'.format(i, j, k, vec[k-1]))
+    else:
+        print('Número de iteraciones realizadas: {}'.format(num_it))
+        print('Norma del residuo final: {.4f}.'.format(res_norm))
+        print('Tabla de resultados:')
+        print('|   i   |   j   |  k(i,j)  |  mu(i,j)  |')
+        print('|-------|-------|----------|-----------|')
+        for j in range(1, m+1):
+            for i in range(1, n+1):
+                k = (j-1)*n+i
+                print('|{:7d^}|{:7d^}|{:10d^}|{:11.3f}|'.format(i, j, k, vec[k-1]))
