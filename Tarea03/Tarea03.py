@@ -35,8 +35,6 @@ def solve_system (xmin, xmax, ymin, ymax, f, g, c, n, m, eps, N_max, omega, imet
         printResult(num_it, N_max, xk, rk_norm, n, m)
     else:
         print('Método no implementado.')
-        
-    
 
 
 def getDiagonal(xmin, xmax, ymin, ymax, c, n, m):
