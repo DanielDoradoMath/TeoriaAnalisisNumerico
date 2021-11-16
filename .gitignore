@@ -3,3 +3,4 @@
 .DS_Store
 pruebas.ipynb
 /.ipynb_checkpoints
+*.cpython-38.pyc

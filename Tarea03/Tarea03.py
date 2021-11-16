@@ -14,9 +14,41 @@ def solvePDE (xmin, xmax, ymin, ymax, f, g, c, n, m, eps, N_max, omega, imet):
     rk_norm = la.norm(rk)
 
     if imet == 1:
-        pass
+        num_it = 0
+        while (num_it < N_max) and (rk_norm > eps):
+            rk_norm = 0
+            xk = -A_left(xk, np.zeros(xk.size), p, n) + b
+            for i in range(xk.size):
+                xk[i] *= 1/(diag[i])
+            
+            rk = b - A_dot(xk)
+            rk_norm = la.norm(rk)
+            num_it += 1
+        printResult(num_it, N_max, xk, rk_norm, n, m)
+    
     elif imet == 2:
-        pass
+        s = xk.size
+        num_it=0
+        while (num_it < N_max) and (rk_norm > eps):
+            for i in range(s):
+                r = 0
+                if i>1:
+                    r += -p*xk[i-1]
+                if i<s-1:
+                    r += -p*xk[i+1]
+                if i+n<s:
+                    r -= xk[i+n]
+                if i-n>0:
+                    r -= xk[i-n]
+                q = b[i] - r
+                q *= omega/diag[i]
+                xk[i] = (1-omega)*xk[i] + q
+            
+            rk = b - A_dot(xk)
+            rk_norm = la.norm(rk)
+            num_it+=1
+        printResult(num_it, N_max, xk, rk_norm, n, m)
+
     elif imet == 3:
         num_it = 0
         pk = rk
@@ -89,7 +121,7 @@ def A_left(x, diag, p, n):
         if i+n<s:
             r -= x[i+n]
         if i-n>0:
-            r -= x[i-x]
+            r -= x[i-n]
         prod[i] = r
     return prod
 
@@ -97,21 +129,21 @@ def A_left(x, diag, p, n):
 def printResult(num_it, N_max, vec, res_norm, n, m):
     if num_it > N_max:
         print('No hubo convergencia en el número de iteraciones máximo.')
-        print('Norma del residuo final: {.4f}.'.format(res_norm))
+        print('Norma del residuo final: {:.10f}.'.format(res_norm))
         print('Tabla de resultados:')
         print('|   i   |   j   |  k(i,j)  |  mu(i,j)  |')
         print('|-------|-------|----------|-----------|')
         for j in range(1, m+1):
             for i in range(1, n+1):
                 k = (j-1)*n+i
-                print('|{:7d^}|{:7d^}|{:10d^}|{:11.3f}|'.format(i, j, k, vec[k-1]))
+                print('|{:^7d}|{:^7d}|{:^10d}|{:^11.3f}|'.format(i, j, k, vec[k-1]))
     else:
         print('Número de iteraciones realizadas: {}'.format(num_it))
-        print('Norma del residuo final: {.4f}.'.format(res_norm))
+        print('Norma del residuo final: {:.10f}.'.format(res_norm))
         print('Tabla de resultados:')
         print('|   i   |   j   |  k(i,j)  |  mu(i,j)  |')
         print('|-------|-------|----------|-----------|')
         for j in range(1, m+1):
             for i in range(1, n+1):
                 k = (j-1)*n+i
-                print('|{:7d^}|{:7d^}|{:10d^}|{:11.3f}|'.format(i, j, k, vec[k-1]))
+                print('|{:^7d}|{:^7d}|{:^10d}|{:^11.3f}|'.format(i, j, k, vec[k-1]))
