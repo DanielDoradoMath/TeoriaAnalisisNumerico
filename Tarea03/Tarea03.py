@@ -115,9 +115,9 @@ def A_left(x, diag, p, n):
     for i, comp in enumerate(x):
         r = diag[i]*comp
         if i>1:
-            r += -p*x[i-1]
+            r -= p*x[i-1]
         if i<s-1:
-            r += -p*x[i+1]
+            r -= p*x[i+1]
         if i+n<s:
             r -= x[i+n]
         if i-n>0:
