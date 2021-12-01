@@ -112,16 +112,16 @@ def constantVector(xmin, xmax, ymin, ymax, f, g, n, m):
 def A_left(x, diag, p, n):
     s = x.size
     prod = np.zeros(s)
-    for i, comp in enumerate(x):
-        r = diag[i]*comp
-        if i>0:
-            r -= p*x[i-1]
-        if i<s-1:
-            r -= p*x[i+1]
-        if i+n<s:
-            r -= x[i+n]
-        if i-n>=0:
-            r -= x[i-n]
+    for k, comp in enumerate(x):
+        r = diag[k]*comp
+        if k>0 and (k%n+1)!=n:
+            r -= p*x[k-1]
+        if k<s-1 and (k%n+1)!=n:
+            r -= p*x[k+1]
+        if k+n<s:
+            r -= x[k+n]
+        if k-n>=0:
+            r -= x[k-n]
         prod[i] = r
     return prod
 
