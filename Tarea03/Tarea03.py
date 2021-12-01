@@ -32,13 +32,13 @@ def solvePDE (xmin, xmax, ymin, ymax, f, g, c, n, m, eps, N_max, omega, imet):
         while (num_it < N_max) and (rk_norm > eps):
             for i in range(s):
                 r = 0
-                if i>1:
-                    r += -p*xk[i-1]
+                if i>=1:
+                    r -= p*xk[i-1]
                 if i<s-1:
-                    r += -p*xk[i+1]
+                    r -= p*xk[i+1]
                 if i+n<s:
                     r -= xk[i+n]
-                if i-n>0:
+                if i-n>=0:
                     r -= xk[i-n]
                 q = b[i] - r
                 q *= omega/diag[i]
@@ -114,13 +114,13 @@ def A_left(x, diag, p, n):
     prod = np.zeros(s)
     for i, comp in enumerate(x):
         r = diag[i]*comp
-        if i>1:
+        if i>0:
             r -= p*x[i-1]
         if i<s-1:
             r -= p*x[i+1]
         if i+n<s:
             r -= x[i+n]
-        if i-n>0:
+        if i-n>=0:
             r -= x[i-n]
         prod[i] = r
     return prod
