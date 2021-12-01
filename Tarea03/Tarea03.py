@@ -114,7 +114,7 @@ def A_left(x, diag, p, n):
     prod = np.zeros(s)
     for k, comp in enumerate(x):
         r = diag[k]*comp
-        if k>0 and (k%n+1)!=n:
+        if k>0 and (k%n)!=0:
             r -= p*x[k-1]
         if k<s-1 and (k%n+1)!=n:
             r -= p*x[k+1]
@@ -122,7 +122,7 @@ def A_left(x, diag, p, n):
             r -= x[k+n]
         if k-n>=0:
             r -= x[k-n]
-        prod[i] = r
+        prod[k] = r
     return prod
 
 
